@@ -6,7 +6,7 @@ from PySide2.QtCore import (QCoreApplication, QPropertyAnimation, QDate, QDateTi
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,QPen, QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter, QPixmap, QRadialGradient)
 from PySide2.QtWidgets import *
 from ui_graphicsview import Ui_GraphicsviewWindow
-from graham_scan import Convexhull
+from convexhull import Convexhull
 from filereader import Filereader
 
 num = 11
@@ -17,6 +17,7 @@ class GraphicsviewWindow(QMainWindow,Ui_GraphicsviewWindow):
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         conv = Convexhull()
+        conv.create_points(num)
         coordinate_system = self.make_coordinate_system()
         point_group = self. make_point_item(conv)
         convex_hull_line_group = self.make_convex_hull_line_item(conv)

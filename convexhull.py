@@ -2,7 +2,7 @@ import os
 import random
 import math
 from point2d import Point2D
-
+from functools import reduce
 class Convexhull(Point2D):
     def __init__(self):
         super().__init__()
@@ -22,8 +22,6 @@ class Convexhull(Point2D):
                 point = (x,y)
                 self.__coordinate_list.append(point)
         self.__coordinate_list = random.sample(self.__coordinate_list,num)
-        path = ".\\"
-        dirs =  os.listdir(path)
         f = open("test.txt",'w')
         f.write('points'+'\n')
         for coordinate in self.__coordinate_list:
@@ -42,33 +40,44 @@ class Convexhull(Point2D):
         for i in range(len(self.__coordinate_list)):
             dx = self.__coordinate_list[i][1]-ref_start_point[0]
             dy = self.__coordinate_list[i][0]-ref_start_point[1]
-            angle = math.degrees((math.atan(dx/dy)))
-            if dx < 0.0:
-                angle += 180.0
-                angle_list.append(angle)
-            elif dy < 0.0: 
-                angle += 360.0
-                angle_list.append(angle)
+            angle = math.degrees((math.atan2(dx,dy)))
+            angle_list.append(angle)
         group = list(zip(angle_list, self.__coordinate_list))
         group.sort(key=lambda  x: x[0])
         self.__coordinate_list =[self.__coordinate_list for angle_list,self.__coordinate_list in group]
         self.__coordinate_list.insert(0,ref_start_point)
         return self.__coordinate_list
+    
 
     def cross_product_direction(self,a,b,c):
         """ cross_product_value > 0 (CW)
             cross_product_value < 0 (ccw)
             cross_product_value = 0 (Co-linear)
         """
-        return (b[1] -a[1])*(c[0]-a[0]) - (b[0] -a[0])*(c[1]-a[1])
+        cross_product_value = (b[1]-a[1])*(c[0]-a[0])-(b[0]-a[0])*(c[1]-a[1])
+        return  cross_product_value
 
     def graham_scan(self):
-        stack = [] 
-        stack.append(self.__coordinate_list[0])
-        stack.append(self.__coordinate_list[0])
-
-        for i in (len(self.__coordinate_list)):
+        stack = []
+        for i in self.__coordinate_list:
             
-
+            while len(stack) > 1 and self.cross_product_direction(stack[-2],stack[-1],i)>= 0:
+                stack.pop()
+            stack.append(i)
+            if not len(stack) or stack[-1] != i:
+                stack.append(i)
+        if self.cross_product_direction(stack[-2],stack[-1],self.__coordinate_list[0]) >= 0:
+            stack.pop()
+            print('1')
+            print(stack)
+        self.__coordinate_list = stack
         return self.__coordinate_list
+
+        
+
+
+
+
+
+
 

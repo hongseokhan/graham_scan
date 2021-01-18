@@ -29,7 +29,7 @@ class Filereader:
                         xcoord = float(file_input[i][0])
                         ycoord = float(file_input[i][1])
                         file_input_list.extend((xcoord,ycoord))
-                n = 2
-                result = [file_input_list[i * n:(i + 1) * n] for i in range((len(file_input_list) + n - 1) // n )]
+            n = 2
+            result = [file_input_list[i * n:(i + 1) * n] for i in range((len(file_input_list) + n - 1) // n )]
         return result
 
